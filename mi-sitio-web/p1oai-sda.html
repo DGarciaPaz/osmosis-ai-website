@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilar 1 - Estrategia, Datos y Planificación</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header section */
+        .header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse"><path d="M 15 0 L 0 0 0 15" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .pillar-badge {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Controls section */
+        .controls {
+            background: #f8f9fa;
+            padding: 25px 40px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            border: 2px solid #e74c3c;
+            background: white;
+            color: #e74c3c;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .lang-btn.active {
+            background: #e74c3c;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231,76,60,0.3);
+        }
+
+        .lang-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231,76,60,0.2);
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.4);
+        }
+
+        /* Content section */
+        .content {
+            padding: 50px 40px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 3px 10px rgba(231,76,60,0.3);
+        }
+
+        .service-title {
+            flex: 1;
+        }
+
+        .service-title h3 {
+            color: #2c3e50;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .service-price {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 10px rgba(39,174,96,0.3);
+        }
+
+        .service-description {
+            color: #6c757d;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: #495057;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-top: 2px;
+        }
+
+        /* AI Feature Section */
+        .ai-feature-section {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e9edf2 100%);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid #dcdfe4;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .ai-feature-section h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .ai-feature-section textarea {
+            width: 100%;
+            max-width: 700px;
+            min-height: 120px;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ced4da;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            resize: vertical;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #343a40;
+        }
+
+        .ai-feature-section button {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(155,89,182,0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-feature-section button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(155,89,182,0.4);
+        }
+
+        .ai-response {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: left;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            min-height: 50px;
+            color: #343a40;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+        }
+
+        .ai-response h3 {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .ai-response ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+
+        .ai-response ul li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .ai-response ul li::before {
+            content: '•';
+            color: #8e44ad; /* Purple bullet point */
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .loading-indicator {
+            display: none;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #8e44ad;
+            font-weight: 600;
+        }
+        
+        /* Contact section */
+        .contact-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 50px;
+            border-radius: 20px;
+        }
+
+        .contact-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 12px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .whatsapp-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .whatsapp-number {
+            background: #25D366;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .whatsapp-number:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                padding: 20px;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .service-card {
+                padding: 25px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .ai-feature-section {
+                padding: 25px;
+            }
+
+            .ai-feature-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .container {
+                margin: 20px auto;
+            }
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="infografia">
+        <div class="header">
+            <div class="header-content">
+                <div class="pillar-badge">PILAR 1</div>
+                <h1 data-es="Estrategia, Datos y Planificación" 
+                   data-en="Strategy, Data and Planning" 
+                   data-pt="Estratégia, Dados e Planejamento">
+                   Estrategia, Datos y Planificación
+                </h1>
+                <p data-es="Construimos los cimientos de tu éxito. Una estrategia basada en datos y un plan sólido son los primeros pasos para crecer, escalar y tomar decisiones informadas." 
+                   data-en="We build the foundations of your success. A data-driven strategy and solid plan are the first steps to grow, scale and make informed decisions." 
+                   data-pt="Construímos as bases do seu sucesso. Uma estratégia baseada em dados e um plano sólido são os primeiros passos para crescer, escalar e tomar decisões informadas.">
+                   Construimos los cimientos de tu éxito. Una estrategia basada en datos y un plan sólido son los primeros pasos para crecer, escalar y tomar decisiones informadas.
+                </p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="changeLanguage('es')">ES</button>
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="changeLanguage('pt')">PT</button>
+            </div>
+            <button class="back-btn" onclick="goBack()">
+                ⬅️ Volver
+            </button>
+        </div>
+
+        <div class="content">
+            <div class="services-grid" id="services-container">
+                </div>
+
+            <div class="ai-feature-section">
+                <h2>Generador de Ideas Estratégicas ✨</h2>
+                <p data-es="Describe tu negocio o idea (industria, mercado objetivo, etc.) y la IA te proporcionará un análisis estratégico rápido y recomendaciones iniciales, incluyendo los servicios más relevantes."
+                   data-en="Describe your business or idea (industry, target market, etc.) and AI will provide a quick strategic analysis and initial recommendations, including the most relevant services."
+                   data-pt="Descreva seu negócio ou ideia (indústria, mercado-alvo, etc.) e a IA fornecerá uma análise estratégica rápida e recomendações iniciais, incluindo os serviços mais relevantes.">
+                    Describe tu negocio o idea (industria, mercado objetivo, etc.) y la IA te proporcionará un análisis estratégico rápido y recomendaciones iniciales, incluyendo los servicios más relevantes.
+                </p>
+                <textarea id="businessDescription" placeholder="Ej: Negocio de panadería artesanal en zona céntrica, enfocado en jóvenes profesionales."></textarea>
+                <button onclick="generateStrategicIdea()">Generar Recomendación ✨</button>
+                <div class="loading-indicator" id="loadingIndicator">Cargando análisis...</div>
+                <div class="ai-response" id="aiResponse"></div>
+            </div>
+
+            <div class="contact-section">
+                <h2 class="contact-title" 
+                    data-es="¿Listo para potenciar tu estrategia y planificación?" 
+                    data-en="Ready to boost your strategy and planning?" 
+                    data-pt="Pronto para impulsionar sua estratégia e planejamento?">
+                    ¿Listo para potenciar tu estrategia y planificación?
+                </h2>
+                <p data-es="Contáctanos y llevemos tu empresa al siguiente nivel con decisiones informadas y un plan sólido." 
+                   data-en="Contact us and let's take your company to the next level with informed decisions and a solid plan." 
+                   data-pt="Entre em contato conosco e vamos levar sua empresa ao próximo nível com decisões informadas e um plano sólido.">
+                   Contáctanos y llevemos tu empresa al siguiente nivel con decisiones informadas y un plan sólido.
+                </p>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>dgarciapazsoldan@gmail.com</span>
+                    </div>
+                </div>
+
+                <div class="whatsapp-numbers">
+                    <a href="https://wa.me/59174425869" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span data-es="Asesoría Comercial" data-en="Commercial Advisory" data-pt="Consultoria Comercial">Asesoría Comercial</span>
+                        <span>+591 74425869</span>
+                    </a>
+                    <a href="https://wa.me/59176894895" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span>+591 76894895</span>
+                    </a>
+                    <a href="https://wa.me/59164431922" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span>+591 64431922</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const content = {
+            es: {
+                title: "Estrategia, Datos y Planificación",
+                subtitle: "Construimos los cimientos de tu éxito. Una estrategia basada en datos y un plan sólido son los primeros pasos para crecer, escalar y tomar decisiones informadas.",
+                services: [
+                    {
+                        icon: "🎯",
+                        title: "Análisis de Mercado y Competencia",
+                        description: "Fundamental para entender el entorno. Realizamos investigación profunda para identificar oportunidades, amenazas y ventajas competitivas que definirán el éxito de tu estrategia comercial.",
+                        features: [
+                            "Análisis de Competencia Básico: Identificación y perfiles de competidores directos ($35)",
+                            "Estudio de Mercado Objetivo: Segmentación y buyer personas detallados ($50)",
+                            "Análisis FODA Estratégico: Fortalezas, oportunidades, debilidades y amenazas ($65)",
+                            "Investigación de Tendencias: Análisis predictivo del sector ($95)"
+                        ]
+                    },
+                    {
+                        icon: "🔮",
+                        title: "Simulación de Datos y Proyecciones",
+                        description: "Crucial para validar tu idea. Cuando los datos reales son escasos, generamos conjuntos de datos hipotéticos robustos basados en el contexto real de tu industria y costos actuales. Esto es vital para análisis de escenarios en planes de negocio.",
+                        features: [
+                            "Generación de Datos Hipotéticos: Creación de datasets realistas ($40)",
+                            "Modelado de Escenarios: Proyecciones financieras con distintos supuestos ($60)",
+                            "Análisis de Sensibilidad: Evaluación de variables clave y su impacto ($80)",
+                            "Proyecciones de Mercado a Largo Plazo: Estimaciones de crecimiento ($110)"
+                        ]
+                    },
+                    {
+                        icon: "📈",
+                        title: "Bases de Datos y Análisis Estadístico",
+                        description: "Transforma datos crudos en inteligencia de negocio. Diseñamos bases de datos personalizadas y aplicamos análisis estadístico avanzado para generar insights accionables que impulsen la toma de decisiones estratégicas.",
+                        features: [
+                            "Diseño de Base de Datos Básica: Estructura para clientes, ventas o inventario ($25)",
+                            "Análisis de Encuestas: Interpretación estadística y reportes visuales ($40)",
+                            "Dashboard Interactivo: Visualización de datos en tiempo real ($65)",
+                            "Análisis Predictivo: Modelos de forecasting y tendencias ($85)",
+                            "Sistema de BI Completo: Inteligencia de negocio integral ($120)"
+                        ]
+                    },
+                    {
+                        icon: "📊",
+                        title: "Desarrollo de Planes de Negocio y Financieros",
+                        description: "La consolidación de tu estrategia. Transformamos tu idea en un plan estratégico profesional, ideal para startups, negocios familiares o empresas que necesitan atraer inversores. Tu mejor carta de presentación.",
+                        features: [
+                            "Plan de Negocios Básico: Estructura fundamental y análisis de mercado ($45)",
+                            "Estudio de Prefactibilidad: Análisis de viabilidad técnica y económica ($65)",
+                            "Modelo Financiero Completo: Proyecciones, flujo de caja y punto de equilibrio ($85)",
+                            "Plan para Inversores: Pitch deck profesional y documentación ejecutiva ($120)",
+                            "Plan Estratégico Integral: Análisis completo con escenarios múltiples ($180)"
+                        ]
+                    }
+                ]
+            },
+            en: {
+                title: "Pillar 1: Strategy, Data and Planning",
+                subtitle: "We build the foundations of your success. A data-driven strategy and solid plan are the first steps to grow, scale and make informed decisions.",
+                services: [
+                    {
+                        icon: "🎯",
+                        title: "Market and Competition Analysis",
+                        description: "Fundamental to understand the environment. We conduct deep research to identify opportunities, threats, and competitive advantages that will define the success of your commercial strategy.",
+                        features: [
+                            "Basic Competition Analysis: Identification and profiles of direct competitors ($35)",
+                            "Target Market Study: Detailed segmentation and buyer personas ($50)",
+                            "Strategic SWOT Analysis: Strengths, opportunities, weaknesses, and threats ($65)",
+                            "Trend Research: Sector predictive analysis ($95)"
+                        ]
+                    },
+                    {
+                        icon: "🔮",
+                        title: "Data Simulation and Projections",
+                        description: "Crucial for validating your idea. When real data is scarce, we generate robust hypothetical datasets based on the real context of your industry and current costs. This is vital for scenario analysis in business plans.",
+                        features: [
+                            "Hypothetical Data Generation: Creation of realistic datasets ($40)",
+                            "Scenario Modeling: Financial projections with different assumptions ($60)",
+                            "Sensitivity Analysis: Evaluation of key variables and their impact ($80)",
+                            "Long-Term Market Projections: Growth estimates ($110)"
+                        ]
+                    },
+                    {
+                        icon: "📈",
+                        title: "Databases and Statistical Analysis",
+                        description: "Transforms raw data into business intelligence. We design custom databases and apply advanced statistical analysis to generate actionable insights that drive strategic decision-making.",
+                        features: [
+                            "Basic Database Design: Structure for customers, sales, or inventory ($25)",
+                            "Survey Analysis: Statistical interpretation and visual reports ($40)",
+                            "Interactive Dashboard: Real-time data visualization ($65)",
+                            "Predictive Analysis: Forecasting models and trends ($85)",
+                            "Complete BI System: Comprehensive business intelligence ($120)"
+                        ]
+                    },
+                    {
+                        icon: "📊",
+                        title: "Business and Financial Plan Development",
+                        description: "The consolidation of your strategy. We transform your idea into a professional strategic plan, ideal for startups, family businesses, or companies needing to attract investors. Your best presentation card.",
+                        features: [
+                            "Basic Business Plan: Fundamental structure and market analysis ($45)",
+                            "Prefeasibility Study: Technical and economic viability analysis ($65)",
+                            "Complete Financial Model: Projections, cash flow, and break-even point ($85)",
+                            "Investor Plan: Professional pitch deck and executive documentation ($120)",
+                            "Comprehensive Strategic Plan: Complete analysis with multiple scenarios ($180)"
+                        ]
+                    }
+                ]
+            },
+            pt: {
+                title: "Pilar 1: Estratégia, Dados e Planejamento",
+                subtitle: "Construímos as bases do seu sucesso. Uma estratégia baseada em dados e um plano sólido são os primeiros passos para crescer, escalar e tomar decisões informadas.",
+                services: [
+                    {
+                        icon: "🎯",
+                        title: "Análise de Mercado e Concorrência",
+                        description: "Fundamental para entender o ambiente. Realizamos pesquisa profunda para identificar oportunidades, ameaças e vantagens competitivas que definirão o sucesso da sua estratégia comercial.",
+                        features: [
+                            "Análise de Concorrência Básica: Identificação e perfis de concorrentes diretos ($35)",
+                            "Estudo de Mercado-Alvo: Segmentação e buyer personas detalhados ($50)",
+                            "Análise SWOT Estratégica: Forças, oportunidades, fraquezas e ameaças ($65)",
+                            "Pesquisa de Tendências: Análise preditiva do setor ($95)"
+                        ]
+                    },
+                    {
+                        icon: "🔮",
+                        title: "Simulação de Dados e Projeções",
+                        description: "Crucial para validar sua ideia. Quando os dados reais são escassos, geramos conjuntos de dados hipotéticos robustos, baseados no contexto real de sua indústria e custos atuais. Isso é vital para análises de cenário em planos de negócios.",
+                        features: [
+                            "Geração de Dados Hipotéticos: Criação de datasets realistas ($40)",
+                            "Modelagem de Cenários: Projeções financeiras com diferentes suposições ($60)",
+                            "Análise de Sensibilidade: Avaliação de variáveis chave e seu impacto ($80)",
+                            "Projeções de Mercado a Longo Praço: Estimativas de crescimento ($110)"
+                        ]
+                    },
+                    {
+                        icon: "📈",
+                        title: "Bancos de Dados e Análise Estatística",
+                        description: "Transforma dados brutos em inteligência de negócios. Projetamos bancos de dados personalizados e aplicamos análise estatística avançada para gerar insights acionáveis que impulsionam a tomada de decisões estratégicas.",
+                        features: [
+                            "Design de Banco de Dados Básico: Estrutura para clientes, vendas ou inventário ($25)",
+                            "Análise de Pesquisas: Interpretación estatística y reportes visuales ($40)",
+                            "Dashboard Interativo: Visualización de datos en tiempo real ($65)",
+                            "Análise Predictiva: Modelos de previsão y tendencias ($85)",
+                            "Sistema de BI Completo: Inteligencia de negocios abrangente ($120)"
+                        ]
+                    },
+                    {
+                        icon: "📊",
+                        title: "Desenvolvimento de Planos de Negócios e Financeiros",
+                        description: "A consolidação de sua estratégia. Transformamos sua ideia em um plano estratégico profissional, ideal para startups, negócios familiares ou empresas que precisam atrair investidores. Sua melhor carta de apresentação.",
+                        features: [
+                            "Plano de Negócios Básico: Estrutura fundamental y análisis de mercado ($45)",
+                            "Estudo de Pré-viabilidade: Análise de viabilidade técnica e econômica ($65)",
+                            "Modelo Financeiro Completo: Projeções, fluxo de caixa e ponto de equilíbrio ($85)",
+                            "Plano para Investidores: Pitch deck profissional e documentação executiva ($120)",
+                            "Plano Estratégico Integral: Análise completa con escenarios múltiples ($180)"
+                        ]
+                    }
+                ]
+            }
+        };
+        
+        let currentLang = 'es';
+        
+        // Función para cambiar el idioma del contenido
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // Actualizar estilo del botón activo
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.lang-btn[onclick*="changeLanguage('${lang}')"]`).classList.add('active');
+            
+            // Actualizar contenido del encabezado
+            document.querySelector('.header h1').textContent = content[lang].title;
+            document.querySelector('.header p').textContent = content[lang].subtitle;
+
+            // Actualizar textos de la sección de IA
+            document.querySelector('.ai-feature-section p').textContent = 
+                lang === 'es' ? "Describe tu negocio o idea (industria, mercado objetivo, etc.) y la IA te proporcionará un análisis estratégico rápido y recomendaciones iniciales, incluyendo los servicios más relevantes." :
+                lang === 'en' ? "Describe your business or idea (industry, target market, etc.) and AI will provide a quick strategic analysis and initial recommendations, including the most relevant services." :
+                "Descreva seu negócio ou ideia (indústria, mercado-alvo, etc.) e a IA fornecerá uma análise estratégica rápida e recomendações iniciais, incluindo os serviços mais relevantes.";
+
+            document.getElementById('businessDescription').placeholder = 
+                lang === 'es' ? "Ej: Negocio de panadería artesanal en zona céntrica, enfocado en jóvenes profesionales." :
+                lang === 'en' ? "Ex: Artisan bakery business in downtown area, focused on young professionals." :
+                "Ex: Negócio de padaria artesanal na área central, focado em jovens profissionais.";
+            
+            document.querySelector('.ai-feature-section button').childNodes[0].nodeValue = // Access text node
+                lang === 'es' ? "Generar Recomendación " :
+                lang === 'en' ? "Generate Recommendation " :
+                "Gerar Recomendação ";
+
+            document.getElementById('loadingIndicator').textContent = 
+                lang === 'es' ? "Cargando análisis..." :
+                lang === 'en' ? "Loading analysis..." :
+                "Carregando análise...";
+
+            // Renderizar servicios con el nuevo idioma
+            renderServices(); 
+        }
+        
+        // Función para renderizar las tarjetas de servicio dinámicamente
+        function renderServices() {
+            const container = document.getElementById('services-container');
+            const services = content[currentLang].services;
+            
+            container.innerHTML = services.map(service => {
+                let priceRange = 'N/A';
+                if (service.features && service.features.length > 0) {
+                    const prices = service.features.map(f => parseFloat(f.split('$')[1]));
+                    if (prices.length === 1) {
+                        priceRange = `$${prices[0]}`;
+                    } else {
+                        priceRange = `$${Math.min(...prices)} - $${Math.max(...prices)}`;
+                    }
+                }
+
+                return `
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">${service.icon}</div>
+                        <div class="service-title">
+                            <h3>${service.title}</h3>
+                        </div>
+                        <div class="service-price">${priceRange}</div>
+                    </div>
+                    <div class="service-description">${service.description}</div>
+                    <ul class="features-list">
+                        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                </div>
+                `;
+            }).join('');
+        }
+        
+        // Función para ir atrás (no genera PDF)
+function goBack() {
+    console.log("Volver clicked.");
+    window.location.href = "/"; // Esto redirigirá a la página de inicio de tu sitio
+}
+
+        // Función para generar ideas estratégicas usando la API de Gemini
+        async function generateStrategicIdea() {
+            const businessDescription = document.getElementById('businessDescription').value;
+            const aiResponseDiv = document.getElementById('aiResponse');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const generateButton = document.querySelector('.ai-feature-section button');
+
+            if (!businessDescription.trim()) {
+                aiResponseDiv.innerHTML = currentLang === 'es' ? '<p>Por favor, describe tu negocio o idea para generar una recomendación.</p>' :
+                                            currentLang === 'en' ? '<p>Please describe your business or idea to generate a recommendation.</p>' :
+                                            '<p>Por favor, descreva seu negócio ou ideia para gerar uma recomendação.</p>';
+                return;
+            }
+
+            loadingIndicator.style.display = 'block';
+            aiResponseDiv.innerHTML = ''; // Clear previous response
+            generateButton.disabled = true; // Disable button during loading
+
+            try {
+                let chatHistory = [];
+                // Construct the list of services with their full price ranges
+                const servicesList = content[currentLang].services.map(service => {
+                    let range = 'N/A';
+                    if (service.features && service.features.length > 0) {
+                        const prices = service.features.map(f => parseFloat(f.split('$')[1]));
+                        if (prices.length === 1) {
+                            range = `$${prices[0]}`;
+                        } else {
+                            range = `$${Math.min(...prices)} - $${Math.max(...prices)}`;
+                        }
+                    }
+                    return `${service.title} (Precio: ${range})`;
+                }).join('\n- ');
+
+
+                const prompt = `Basado en la siguiente descripción de un negocio o idea, genera un 'Análisis Estratégico Rápido' con 3-4 consideraciones clave, un breve 'Resumen de Oportunidades', y 2 'Recomendaciones Iniciales'.
+
+Además, identifica de la siguiente lista de servicios del Pilar 1, los 1-3 servicios más relevantes que este negocio probablemente necesitaría en una etapa inicial. Para cada servicio recomendado, incluye su precio y una muy breve justificación de por qué es relevante para el negocio descrito.
+
+Lista de Servicios del Pilar 1:
+- ${servicesList}
+
+Formato de respuesta (usa encabezados de Markdown para claridad y siempre proporciona todas las secciones, incluso si son breves):
+### Análisis Estratégico Rápido
+[Contenido del análisis]
+
+### Resumen de Oportunidades
+[Contenido del resumen]
+
+### Recomendaciones Iniciales
+[Contenido de las recomendaciones]
+
+### Servicios Recomendados para tu Negocio
+* [Nombre del Servicio 1] (Precio: [Precio del Servicio 1]): [Breve Justificación]
+* [Nombre del Servicio 2] (Precio: [Precio del Servicio 2]): [Breve Justificación]
+(Si hay un tercer servicio, agrégalo aquí)
+
+Descripción del negocio: ${businessDescription}`;
+                
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // API key will be provided by Canvas runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error Response:', errorData);
+                    let errorMessage = currentLang === 'es' ? 'Error al contactar la IA. ' :
+                                       currentLang === 'en' ? 'Error contacting AI. ' :
+                                       'Erro ao contatar a IA. ';
+                    if (errorData.error && errorData.error.message) {
+                        errorMessage += `${currentLang === 'es' ? 'Mensaje del servidor: ' : currentLang === 'en' ? 'Server message: ' : 'Mensagem do servidor: '}${errorData.error.message}`;
+                    } else {
+                        errorMessage += `${currentLang === 'es' ? 'Código de estado: ' : currentLang === 'en' ? 'Status code: ' : 'Código de status: '}${response.status}.`;
+                    }
+                    aiResponseDiv.innerHTML = `<p style="color: red;">${errorMessage}</p>`;
+                    return; // Exit function if API call itself failed
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    // Convert markdown to HTML for better display
+                    let formattedText = text.replace(/### (.*)/g, '<h3>$1</h3>'); // Convert ### to h3
+                    formattedText = formattedText.replace(/\* (.*)/g, '<li>$1</li>'); // Convert list items
+                    // Ensure ul tags wrap the list items if they are not already there
+                    if (!formattedText.includes('<ul>')) {
+                        formattedText = formattedText.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+                    }
+                    aiResponseDiv.innerHTML = formattedText;
+                } else {
+                    aiResponseDiv.innerHTML = currentLang === 'es' ? '<p>No se pudo generar una recomendación. La IA no proporcionó contenido. Intenta con una descripción más detallada.</p>' :
+                                                currentLang === 'en' ? '<p>Could not generate a recommendation. AI did not provide content. Try with a more detailed description.</p>' :
+                                                '<p>Não foi possível gerar uma recomendação. A IA não forneceu conteúdo. Tente com uma descrição mais detalhada.</p>';
+                    console.error('Unexpected API response structure or empty content:', result);
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                aiResponseDiv.innerHTML = currentLang === 'es' ? '<p>Error de conexión o inesperado. Asegúrate de tener internet y vuelve a intentarlo.</p>' :
+                                            currentLang === 'en' ? '<p>Connection or unexpected error. Ensure you have internet and try again.</p>' :
+                                            '<p>Erro de conexão ou inesperado. Certifique-se de ter internet e tente novamente.</p>';
+            } finally {
+                loadingIndicator.style.display = 'none';
+                generateButton.disabled = false; // Re-enable button
+            }
+        }
+
+        // Inicializar con contenido en español al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            changeLanguage('es'); 
+        });
+    </script>
+</body>
+</html>

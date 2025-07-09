@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilar 4 - Asistencia Académica</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Background colors chosen to evoke calm, knowledge, and professionalism */
+            background: linear-gradient(135deg, #e0f2f7 0%, #bbdefb 100%); /* Light blue gradient background */
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333; /* Default text color */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header section */
+        .header {
+            /* Header colors for a strong, trustworthy academic feel */
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); /* Blue gradient */
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle grid pattern for visual interest in header */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse"><path d="M 15 0 L 0 0 0 15" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2; /* Ensures content is above the pattern */
+        }
+
+        .pillar-badge {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Soft shadow for readability */
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Controls section (language and back button) */
+        .controls {
+            background: #f8f9fa; /* Light grey background */
+            padding: 25px 40px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            border: 2px solid #2196F3; /* Border matching header blue */
+            background: white;
+            color: #2196F3; /* Text matching header blue */
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .lang-btn.active {
+            background: #2196F3; /* Active state uses header blue */
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33,150,243,0.3);
+        }
+
+        .lang-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33,150,243,0.2);
+        }
+
+        .back-btn {
+            /* Back button in a more neutral blue-grey */
+            background: linear-gradient(135deg, #607D8B 0%, #455A64 100%); 
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(96,125,139,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(96,125,139,0.4);
+        }
+
+        /* Content section - where service cards reside */
+        .content {
+            padding: 50px 40px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Responsive grid for services */
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #fdfefe 0%, #ffffff 100%); /* White card background */
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Accent bar at the top of each service card */
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); /* Matches header blue */
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12); /* Lift and stronger shadow on hover */
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            /* Icon background in a vibrant teal */
+            background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); 
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0,188,212,0.3);
+        }
+
+        .service-title {
+            flex: 1; /* Allows title to take available space */
+        }
+
+        .service-title h3 {
+            color: #2c3e50; /* Dark text for titles */
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        /* Price tag styling (green for positive connotation) */
+        .service-price {
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%); /* Green for prices */
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 10px rgba(76,175,80,0.3);
+        }
+
+        .service-description {
+            color: #6c757d; /* Muted grey for descriptions */
+            margin-bottom: 25px;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .features-list {
+            list-style: none; /* Remove default list bullets */
+            margin-bottom: 25px;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: #495057;
+        }
+
+        .features-list li::before {
+            content: '✓'; /* Custom checkmark */
+            color: #4CAF50; /* Green checkmark */
+            font-weight: bold;
+            margin-right: 10px;
+            margin-top: 2px;
+        }
+
+        /* Special handling for "Pre defensa" sub-items with individual prices */
+        .sub-features-list {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 15px;
+        }
+
+        .sub-features-list li {
+            display: flex;
+            justify-content: space-between; /* Aligns name to left, price to right */
+            align-items: center;
+            margin-bottom: 8px;
+            background: #f0f8ff; /* Lightest blue background for sub-items */
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid #e3f2fd;
+        }
+
+        .sub-features-list li span:first-child {
+            font-weight: 600;
+            color: #3F51B5; /* Indigo for sub-item name */
+        }
+        
+        /* Contact section - Adapted from Pilar 3 with new colors */
+        .contact-section {
+            /* Darker blue for contact section footer */
+            background: linear-gradient(135deg, #0D47A1 0%, #1976D2 100%); 
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 50px;
+            border-radius: 20px;
+        }
+
+        .contact-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 12px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .whatsapp-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .whatsapp-number {
+            background: #25D366; /* WhatsApp green */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .whatsapp-number:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                padding: 20px;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr; /* Single column for mobile */
+                gap: 25px;
+            }
+            
+            .service-card {
+                padding: 25px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .container {
+                margin: 20px auto;
+            }
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="infografia">
+        <div class="header">
+            <div class="header-content">
+                <div class="pillar-badge">PILAR 4</div>
+                <h1 data-es="Asistencia Académica" 
+                   data-en="Academic Assistance" 
+                   data-pt="Assistência Acadêmica">
+                   Asistencia Académica
+                </h1>
+                <p data-es="Potenciamos tu éxito académico. Ofrecemos herramientas y soporte especializado para simplificar tu investigación y defensa de tesis." 
+                   data-en="We boost your academic success. We offer specialized tools and support to simplify your research and thesis defense." 
+                   data-pt="Impulsionamos o seu sucesso acadêmico. Oferecemos ferramentas e suporte especializado para simplificar sua pesquisa e defesa de tese.">
+                   Potenciamos tu éxito académico. Ofrecemos herramientas y soporte especializado para simplificar tu investigación y defensa de tesis.
+                </p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="changeLanguage('es')">ES</button>
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="changeLanguage('pt')">PT</button>
+            </div>
+            <button class="back-btn" onclick="goBack()">
+                ⬅️ Volver
+            </button>
+        </div>
+
+        <div class="content">
+            <div class="services-grid" id="services-container">
+                <!-- Services will be populated by JavaScript -->
+                </div>
+
+            <div class="contact-section">
+                <h2 class="contact-title" 
+                    data-es="¿Listo para potenciar tu éxito académico?" 
+                    data-en="Ready to boost your academic success?" 
+                    data-pt="Pronto para impulsionar seu sucesso acadêmico?">
+                    ¿Listo para potenciar tu éxito académico?
+                </h2>
+                <p data-es="Contáctanos para descubrir cómo nuestros servicios pueden simplificar tu camino hacia el éxito académico." 
+                   data-en="Contact us to discover how our services can simplify your path to academic success." 
+                   data-pt="Entre em contato para descobrir como nossos serviços podem simplificar seu caminho para o sucesso acadêmico.">
+                   Contáctanos para descubrir cómo nuestros servicios pueden simplificar tu camino hacia el éxito académico.
+                </p>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>dgarciapazsoldan@gmail.com</span>
+                    </div>
+                </div>
+
+                <div class="whatsapp-numbers">
+                    <a href="https://wa.me/59174425869" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span data-es="Asesoría Comercial" data-en="Commercial Advisory" data-pt="Consultoria Comercial">Asesoría Comercial</span>
+                        <span>+591 74425869</span>
+                    </a>
+                    <a href="https://wa.me/59176894895" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span>+591 76894895</span>
+                    </a>
+                    <a href="https://wa.me/59164431922" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span>+591 64431922</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Content data for each language
+        const content = {
+            es: {
+                title: "Asistencia Académica",
+                subtitle: "Potenciamos tu éxito académico. Ofrecemos herramientas y soporte especializado para simplificar tu investigación y defensa de tesis.",
+                services: [
+                    {
+                        icon: "📄",
+                        title: "Plantilla APA Personalizada",
+                        description: "Simplifica la estructura de tu tesis para que te enfoques en redactar.",
+                        price: "10",
+                        priceUnit: "dólares",
+                        features: [
+                            "Asignación de estilo a los niveles/títulos",
+                            "Creación de secciones para numeración: romanos y arábigos",
+                            "Creación automática y actualizable de Índice de contenido"
+                        ]
+                    },
+                    {
+                        icon: "🔍",
+                        title: "Búsqueda y Organización de Fuentes",
+                        description: "Acelera la revisión bibliográfica de tu investigación.",
+                        price: "30",
+                        priceUnit: "dólares paquete completo",
+                        features: [
+                            "Revisión y descarga de artículos científicos directamente relacionados con tu tema",
+                            "Organización utilizando la metodología sigma y la matriz de relevancia"
+                        ]
+                    },
+                    {
+                        icon: "📚",
+                        title: "Automatización de Bibliografía",
+                        description: "Integra referencias sin errores de formato, ahorrándote tiempo y esfuerzo.",
+                        price: "25",
+                        priceUnit: "dólares (paquete completo)",
+                        features: [
+                            "Creación de librería en Mendeley o Zotero",
+                            "Generación automática de citas en texto y bibliografía",
+                            "Sesión exprés (1h) de capacitación en uso avanzado de la herramienta"
+                        ]
+                    },
+                    {
+                        icon: "📊",
+                        title: "Pre defensa",
+                        description: "Prepárate integralmente para tu defensa de tesis con nuestros servicios personalizados.",
+                        price: "Costo Individual", // Special price handling
+                        isIndividualPrice: true, // Flag for specific rendering
+                        features: [
+                            { name: "Guía de estudio", price: "5" },
+                            { name: "Simulación de defensa (Cuestionamientos con preguntas complejas y argumentación)", price: "10" },
+                            { name: "Infografía para presentación de tesis (no diapositivas)", price: "20" }
+                        ]
+                    }
+                ]
+            },
+            en: {
+                title: "Academic Assistance",
+                subtitle: "We boost your academic success. We offer specialized tools and support to simplify your research and thesis defense.",
+                services: [
+                    {
+                        icon: "📄",
+                        title: "Custom APA Template",
+                        description: "Simplify your thesis structure so you can focus on writing.",
+                        price: "10",
+                        priceUnit: "dollars",
+                        features: [
+                            "Style assignment to levels/headings",
+                            "Creation of sections for numbering: Roman and Arabic",
+                            "Automatic and updatable Table of Contents creation"
+                        ]
+                    },
+                    {
+                        icon: "🔍",
+                        title: "Source Search and Organization",
+                        description: "Accelerate your research's bibliographic review.",
+                        price: "30",
+                        priceUnit: "dollars full package",
+                        features: [
+                            "Review and download of scientific articles directly related to your topic",
+                            "Organization using the sigma methodology and relevance matrix"
+                        ]
+                    },
+                    {
+                        icon: "📚",
+                        title: "Bibliography Automation",
+                        description: "Integrate references without formatting errors, saving you time and effort.",
+                        price: "25",
+                        priceUnit: "dollars (full package)",
+                        features: [
+                            "Library creation in Mendeley or Zotero",
+                            "Automatic generation of in-text citations and bibliography",
+                            "Express (1h) training session on advanced tool usage"
+                        ]
+                    },
+                    {
+                        icon: "📊",
+                        title: "Pre-defense",
+                        description: "Prepare thoroughly for your thesis defense with our personalized services.",
+                        price: "Individual Cost",
+                        isIndividualPrice: true,
+                        features: [
+                            { name: "Study Guide", price: "5" },
+                            { name: "Defense Simulation (Questioning with complex questions and argumentation)", price: "10" },
+                            { name: "Infographic for thesis presentation (not slides)", price: "20" }
+                        ]
+                    }
+                ]
+            },
+            pt: {
+                title: "Assistência Acadêmica",
+                subtitle: "Impulsionamos o seu sucesso acadêmico. Oferecemos ferramentas e suporte especializado para simplificar sua pesquisa e defesa de tese.",
+                services: [
+                    {
+                        icon: "📄",
+                        title: "Modelo APA Personalizado",
+                        description: "Simplifique a estrutura da sua tese para que você se concentre na redação.",
+                        price: "10",
+                        priceUnit: "dólares",
+                        features: [
+                            "Atribuição de estilo aos níveis/títulos",
+                            "Criação de seções para numeração: romanos e arábigos",
+                            "Criação automática e atualizável de Sumário"
+                        ]
+                    },
+                    {
+                        icon: "🔍",
+                        title: "Pesquisa e Organização de Fontes",
+                        description: "Acelere a revisão bibliográfica de sua pesquisa.",
+                        price: "30",
+                        priceUnit: "dólares pacote completo",
+                        features: [
+                            "Revisão e download de artigos científicos diretamente relacionados ao seu tema",
+                            "Organização utilizando a metodologia sigma e a matriz de relevância"
+                        ]
+                    },
+                    {
+                        icon: "📚",
+                        title: "Automação de Bibliografia",
+                        description: "Integre referências sem erros de formato, economizando tempo e esforço.",
+                        price: "25",
+                        priceUnit: "dólares (pacote completo)",
+                        features: [
+                            "Criação de biblioteca no Mendeley ou Zotero",
+                            "Geração automática de citações no texto e bibliografia",
+                            "Sessão expressa (1h) de treinamento no uso avançado da ferramenta"
+                        ]
+                    },
+                    {
+                        icon: "📊",
+                        title: "Pré-defesa",
+                        description: "Prepare-se integralmente para sua defesa de tese com nossos servicios personalizados.",
+                        price: "Custo Individual",
+                        isIndividualPrice: true,
+                        features: [
+                            { name: "Guia de estudo", price: "5" },
+                            { name: "Simulação de defesa (Questionamentos con preguntas complexas y argumentación)", price: "10" },
+                            { name: "Infográfico para apresentação de tese (não slides)", price: "20" }
+                        ]
+                    }
+                ]
+            }
+        };
+        
+        let currentLang = 'es';
+        
+        // Function to change the language of the content
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // Update active button styling
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.lang-btn[onclick*="changeLanguage('${lang}')"]`).classList.add('active');
+            
+            // Update header content
+            document.querySelector('.header h1').textContent = content[lang].title;
+            document.querySelector('.header p').textContent = content[lang].subtitle;
+
+            // Update contact section texts
+            document.querySelector('.contact-title').textContent = 
+                lang === 'es' ? "¿Listo para potenciar tu éxito académico?" : /* Adjusted for Pillar 4 context */
+                lang === 'en' ? "Ready to boost your academic success?" :
+                "Pronto para impulsionar seu sucesso acadêmico?";
+            document.querySelector('.contact-section p').textContent = 
+                lang === 'es' ? "Contáctanos para descubrir cómo nuestros servicios pueden simplificar tu camino hacia el éxito académico." : /* Adjusted for Pillar 4 context */
+                lang === 'en' ? "Contact us to discover how our services can simplify your path to academic success." :
+                "Entre em contato para descobrir como nossos serviços podem simplificar seu caminho para o sucesso acadêmico.";
+            document.querySelector('.whatsapp-number span[data-es="Asesoría Comercial"]').textContent = 
+                lang === 'es' ? "Asesoría Comercial" :
+                lang === 'en' ? "Commercial Advisory" :
+                "Consultoria Comercial";
+
+            // Render services with the new language
+            renderServices(); 
+        }
+        
+        // Function to render the service cards dynamically
+        function renderServices() {
+            const container = document.getElementById('services-container');
+            const services = content[currentLang].services;
+            
+            container.innerHTML = services.map(service => {
+                // Determine the price display for the main service card header
+                let headerPriceHtml = '';
+                if (!service.isIndividualPrice) {
+                    headerPriceHtml = `<div class="service-price">$${service.price}</div>`;
+                }
+
+                let featuresHtml = '';
+                if (service.isIndividualPrice) {
+                    // Specific rendering for "Pre defensa" with sub-item prices
+                    featuresHtml = `<ul class="sub-features-list">
+                        ${service.features.map(feature => `
+                            <li>
+                                <span>${feature.name}</span>
+                                <span>$${feature.price}</span>
+                            </li>
+                        `).join('')}
+                    </ul>`;
+                } else {
+                    // Standard rendering for other services
+                    featuresHtml = `<ul class="features-list">
+                        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>`;
+                }
+
+                return `
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">${service.icon}</div>
+                        <div class="service-title">
+                            <h3>${service.title}</h3>
+                        </div>
+                        ${headerPriceHtml}
+                    </div>
+                    <div class="service-description">${service.description}</div>
+                    ${featuresHtml}
+                </div>
+                `;
+            }).join('');
+        }
+        
+        // Función para ir atrás
+function goBack() {
+    console.log("Volver clicked.");
+    window.location.href = "/"; // Esto redirigirá a la página de inicio de tu sitio
+}
+
+        // Initialize with Spanish content on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            changeLanguage('es'); 
+        });
+    </script>
+</body>
+</html>

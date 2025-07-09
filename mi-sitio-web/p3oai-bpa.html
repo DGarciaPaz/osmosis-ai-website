@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilar 3 - Automatización de Procesos Empresariales</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header section */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse"><path d="M 15 0 L 0 0 0 15" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .pillar-badge {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Controls section */
+        .controls {
+            background: #f8f9fa;
+            padding: 25px 40px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            border: 2px solid #1e3c72;
+            background: white;
+            color: #1e3c72;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .lang-btn.active {
+            background: #1e3c72;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30,60,114,0.3);
+        }
+
+        .lang-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30,60,114,0.2);
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.4);
+        }
+
+        /* Content section */
+        .content {
+            padding: 50px 40px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .service-title {
+            flex: 1;
+        }
+
+        .service-title h3 {
+            color: #1e3c72;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .service-price {
+            background: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 10px rgba(40,167,69,0.3);
+        }
+
+        .service-description {
+            color: #6c757d;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: #495057;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-top: 2px;
+        }
+
+        /* Contact section */
+        .contact-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 50px;
+            border-radius: 20px;
+        }
+
+        .contact-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 12px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .whatsapp-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .whatsapp-number {
+            background: #25D366;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .whatsapp-number:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px; /* Adjusted padding for smaller screens */
+            }
+
+            .container {
+                margin: 0; /* Remove auto margin to allow full width */
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                padding: 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .content {
+                padding: 30px 20px; /* Adjusted padding for smaller screens */
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr; /* Single column for services on mobile */
+                gap: 25px;
+            }
+            
+            .service-card {
+                padding: 25px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .container {
+                margin: 20px auto; /* Re-apply margin for tablet-like screens */
+            }
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Adjust grid for tablets */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container" id="infografia">
+        <div class="header">
+            <div class="header-content">
+                <div class="pillar-badge">PILAR 3</div>
+                <h1 data-es="Automatización de Procesos Empresariales" 
+                   data-en="Business Process Automation" 
+                   data-pt="Automação de Processos Empresariais">
+                   Automatización de Procesos Empresariales
+                </h1>
+                <p data-es="Optimizamos tu operación con tecnología inteligente, ahorrándote tiempo y mejorando la experiencia de tus clientes. Dejamos que la IA trabaje por ti." 
+                   data-en="We optimize your operations with intelligent technology, saving you time and improving your customers' experience. Let AI work for you." 
+                   data-pt="Otimizamos sua operação com tecnologia inteligente, economizando tempo e melhorando a experiência dos seus clientes. Deixe a IA trabalhar para você.">
+                   Optimizamos tu operación con tecnología inteligente, ahorrándote tiempo y mejorando la experiencia de tus clientes. Dejamos que la IA trabaje por ti.
+                </p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="changeLanguage('es')">ES</button>
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="changeLanguage('pt')">PT</button>
+            </div>
+            <button class="back-btn" onclick="goBack()">
+                ⬅️ Volver <!-- Back icon and text -->
+            </button>
+        </div>
+
+        <div class="content">
+            <div class="services-grid">
+                <!-- Servicio 1: Automatización de Tareas y Agentes de IA -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🤖</div>
+                        <div class="service-title">
+                            <h3 data-es="Automatización de Tareas y Agentes de IA" 
+                               data-en="Task Automation and AI Agents" 
+                               data-pt="Automação de Tarefas e Agentes de IA">
+                               Automatización de Tareas y Agentes de IA
+                            </h3>
+                        </div>
+                        <div class="service-price">$25 - $85</div>
+                    </div>
+                    <div class="service-description" 
+                         data-es="Identificamos procesos repetitivos en tu negocio y los automatizamos con IA avanzada. Libera tu tiempo para concentrarte en hacer crecer tu empresa mientras la tecnología maneja las tareas rutinarias." 
+                         data-en="We identify repetitive processes in your business and automate them with advanced AI. Free up your time to focus on growing your company while technology handles routine tasks." 
+                         data-pt="Identificamos processos repetitivos no seu negócio e os automatizamos com IA avançada. Libere seu tempo para se concentrar no crescimento da sua empresa enquanto a tecnologia cuida das tarefas rotineiras.">
+                         Identificamos procesos repetitivos en tu negocio y los automatizamos con IA avanzada. Libera tu tiempo para concentrarte en hacer crecer tu empresa mientras la tecnología maneja las tareas rutinarias.
+                    </div>
+                    <ul class="features-list">
+                        <li data-es="Email Marketing Automatizado: Secuencias de bienvenida, seguimiento y newsletters ($25)" 
+                            data-en="Automated Email Marketing: Welcome sequences, follow-up and newsletters ($25)" 
+                            data-pt="Email Marketing Automatizado: Sequências de boas-vindas, acompanhamento e newsletters ($25)">
+                            Email Marketing Automatizado: Secuencias de bienvenida, seguimiento y newsletters ($25)
+                        </li>
+                        <li data-es="Organización Inteligente de Archivos: Clasificación, renombrado y estructura automática ($35)" 
+                            data-en="Intelligent File Organization: Classification, renaming and automatic structure ($35)" 
+                            data-pt="Organização Inteligente de Arquivos: Classificação, renomeação e estrutura automática ($35)">
+                            Organización Inteligente de Archivos: Clasificación, renombrado y estructura automática ($35)
+                        </li>
+                        <li data-es="Chatbots Inteligentes: Respuestas automáticas para redes sociales y WhatsApp Business ($45)" 
+                            data-en="Intelligent Chatbots: Automatic responses for social media and WhatsApp Business ($45)" 
+                            data-pt="Chatbots Inteligentes: Respostas automáticas para redes sociais e WhatsApp Business ($45)">
+                            Chatbots Inteligentes: Respuestas automáticas para redes sociales y WhatsApp Business ($45)
+                        </li>
+                        <li data-es="Automatización de Reportes: Generación y envío programado de informes ($55)" 
+                            data-en="Report Automation: Scheduled generation and sending of reports ($55)" 
+                            data-pt="Automação de Relatórios: Geração e envio programado de relatórios ($55)">
+                            Automatización de Reportes: Generación y envío programado de informes ($55)
+                        </li>
+                        <li data-es="Integración de APIs: Conexión automática entre diferentes plataformas ($85)" 
+                            data-en="API Integration: Automatic connection between different platforms ($85)" 
+                            data-pt="Integração de APIs: Conexão automática entre diferentes plataformas ($85)">
+                            Integración de APIs: Conexión automática entre diferentes plataformas ($85)
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Servicio 2: Formularios Inteligentes -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">📋</div>
+                        <div class="service-title">
+                            <h3 data-es="Formularios Inteligentes con Generación de PDF" 
+                               data-en="Smart Forms with PDF Generation" 
+                               data-pt="Formulários Inteligentes com Geração de PDF">
+                               Formularios Inteligentes con Generación de PDF
+                            </h3>
+                        </div>
+                        <div class="service-price">$30 - $120</div>
+                    </div>
+                    <div class="service-description" 
+                         data-es="Digitalizamos completamente tus procesos de recolección de datos. Creamos formularios web inteligentes que generan documentos PDF profesionales automáticamente y almacenan información de manera segura con validaciones avanzadas." 
+                         data-en="We completely digitize your data collection processes. We create intelligent web forms that automatically generate professional PDF documents and store information securely with advanced validations." 
+                         data-pt="Digitalizamos completamente seus processos de coleta de dados. Criamos formulários web inteligentes que geram documentos PDF profissionais automaticamente e armazenam informações com segurança com validações avançadas.">
+                         Digitalizamos completamente tus procesos de recolección de datos. Creamos formularios web inteligentes que generan documentos PDF profesionales automáticamente y almacenan información de manera segura con validaciones avanzadas.
+                    </div>
+                    <ul class="features-list">
+                        <li data-es="Formularios de Contacto/Encuestas: Con validación inteligente y respuestas automáticas ($30)" 
+                            data-en="Contact Forms/Surveys: With intelligent validation and automatic responses ($30)" 
+                            data-pt="Formulários de Contato/Pesquisas: Com validação inteligente e respostas automáticas ($30)">
+                            Formularios de Contacto/Encuestas: Con validación inteligente y respuestas automáticas ($30)
+                        </li>
+                        <li data-es="Registro de Clientes/Inscripciones: Base de datos automática con seguimiento ($45)" 
+                            data-en="Customer Registration/Subscriptions: Automatic database with tracking ($45)" 
+                            data-pt="Registro de Clientes/Inscrições: Banco de dados automático com acompanhamento ($45)">
+                            Registro de Clientes/Inscripciones: Base de datos automática con seguimiento ($45)
+                        </li>
+                        <li data-es="Generador de Cotizaciones: Cálculos automáticos y PDF profesional ($65)" 
+                            data-en="Quote Generator: Automatic calculations and professional PDF ($65)" 
+                            data-pt="Gerador de Cotações: Cálculos automáticos e PDF profissional ($65)">
+                            Generador de Cotizaciones: Cálculos automáticos e PDF profissional ($65)
+                        </li>
+                        <li data-es="Contratos Digitales: Firma electrónica y almacenamiento seguro ($85)" 
+                            data-en="Digital Contracts: Electronic signature and secure storage ($85)" 
+                            data-pt="Contratos Digitais: Assinatura eletrônica e armazenamento seguro ($85)">
+                            Contratos Digitales: Firma electrónica y almacenamiento seguro ($85)
+                        </li>
+                        <li data-es="Sistema de Órdenes/Pedidos: Gestión completa con notificaciones automáticas ($120)" 
+                            data-en="Order/Request System: Complete management with automatic notifications ($120)" 
+                            data-pt="Sistema de Pedidos: Gestão completa com notificações automáticas ($120)">
+                            Sistema de Órdenes/Pedidos: Gestión completa con notificaciones automáticas ($120)
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Servicio 3: Automatización de Redes Sociales -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">📱</div>
+                        <div class="service-title">
+                            <h3 data-es="Automatización de Redes Sociales" 
+                               data-en="Social Media Automation" 
+                               data-pt="Automação de Redes Sociais">
+                               Automatización de Redes Sociales
+                            </h3>
+                        </div>
+                        <div class="service-price">$35 - $95</div>
+                    </div>
+                    <div class="service-description" 
+                         data-es="Mantén una presencia constante y profesional en todas tus redes sociales. Automatizamos la publicación de contenido, respuestas a comentarios y análisis de engagement con IA." 
+                         data-en="Maintain a constant and professional presence on all your social networks. We automate content publishing, comment responses and engagement analysis with AI." 
+                         data-pt="Mantenha uma presença constante e profissional em todas as suas redes sociais. Automatizamos a publicação de conteúdo, respostas a comentários e análise de engajamento com IA.">
+                         Mantén una presencia constante y profesional en todas tus redes sociales. Automatizamos la publicación de contenido, respuestas a comentarios y análisis de engagement con IA.
+                    </div>
+                    <ul class="features-list">
+                        <li data-es="Programación de Publicaciones: Multi-plataforma con optimización horaria ($35)" 
+                            data-en="Post Scheduling: Multi-platform with time optimization ($35)" 
+                            data-pt="Agendamento de Posts: Multi-plataforma com otimização de horário ($35)">
+                            Programación de Publicaciones: Multi-plataforma con optimización horaria ($35)
+                        </li>
+                        <li data-es="Respuestas Automáticas: Comentarios y mensajes directos inteligentes ($50)" 
+                            data-en="Automatic Responses: Intelligent comments and direct messages ($50)" 
+                            data-pt="Respostas Automáticas: Comentários e mensagens diretas inteligentes ($50)">
+                            Respuestas Automáticas: Comentarios y mensajes directos inteligentes ($50)
+                        </li>
+                        <li data-es="Análisis y Reportes: Métricas automáticas y insights de IA ($65)" 
+                            data-en="Analytics and Reports: Automatic metrics and AI insights ($65)" 
+                            data-pt="Análises e Relatórios: Métricas automáticas e insights de IA ($65)">
+                            Análisis y Reportes: Métricas automáticas y insights de IA ($65)
+                        </li>
+                        <li data-es="Gestión de Leads: Captura y seguimiento automático desde redes sociales ($95)" 
+                            data-en="Lead Management: Automatic capture and tracking from social media ($95)" 
+                            data-pt="Gestão de Leads: Captura e acompanhamento automático das redes sociais ($95)">
+                            Gestión de Leads: Captura y seguimiento automático desde redes sociales ($95)
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Servicio 4: Automatización de Inventarios y Ventas -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">📊</div>
+                        <div class="service-title">
+                            <h3 data-es="Automatización de Inventarios y Ventas" 
+                               data-en="Inventory and Sales Automation" 
+                               data-pt="Automação de Inventários e Vendas">
+                               Automatización de Inventarios y Ventas
+                            </h3>
+                        </div>
+                        <div class="service-price">$55 - $150</div>
+                    </div>
+                    <div class="service-description" 
+                         data-es="Optimiza tu gestión comercial con sistemas inteligentes que manejan inventarios, procesan ventas y generan reportes financieros automáticamente con predicciones de IA." 
+                         data-en="Optimize your commercial management with intelligent systems that handle inventories, process sales and generate financial reports automatically with AI predictions." 
+                         data-pt="Otimize sua gestão comercial com sistemas inteligentes que gerenciam estoques, processam vendas e geram relatórios financeiros automaticamente com previsões de IA.">
+                         Optimiza tu gestión comercial con sistemas inteligentes que manejan inventarios, procesan ventas y generan reportes financieros automáticamente con predicciones de IA.
+                    </div>
+                    <ul class="features-list">
+                        <li data-es="Control de Stock Automático: Alertas de reabastecimiento inteligentes ($55)" 
+                            data-en="Automatic Stock Control: Intelligent restocking alerts ($55)" 
+                            data-pt="Controle de Estoque Automático: Alertas de reabastecimento inteligentes ($55)">
+                            Control de Stock Automático: Alertas de reabastecimiento inteligentes ($55)
+                        </li>
+                        <li data-es="Procesamiento de Ventas: Facturas automáticas y seguimiento de pagos ($75)" 
+                            data-en="Sales Processing: Automatic invoices and payment tracking ($75)" 
+                            data-pt="Processamento de Vendas: Faturas automáticas e acompanhamento de pagamentos ($75)">
+                            Procesamiento de Ventas: Facturas automáticas y seguimiento de pagos ($75)
+                        </li>
+                        <li data-es="Análisis Predictivo: Forecasting de ventas con IA ($95)" 
+                            data-en="Predictive Analysis: AI-powered sales forecasting ($95)" 
+                            data-pt="Análise Preditiva: Previsão de vendas com IA ($95)">
+                            Análisis Predictivo: Forecasting de ventas con IA ($95)
+                        </li>
+                        <li data-es="CRM Automatizado: Gestión completa de clientes y pipeline ($150)" 
+                            data-en="Automated CRM: Complete customer and pipeline management ($150)" 
+                            data-pt="CRM Automatizado: Gestão completa de clientes e pipeline ($150)">
+                            CRM Automatizado: Gestión completa de clientes y pipeline ($150)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="contact-section">
+                <h2 class="contact-title" 
+                    data-es="¿Listo para automatizar tu negocio?" 
+                    data-en="Ready to automate your business?" 
+                    data-pt="Pronto para automatizar seu negócio?">
+                    ¿Listo para automatizar tu negocio?
+                </h2>
+                <p data-es="Contáctanos y llevemos tu empresa al siguiente nivel con tecnología inteligente." 
+                   data-en="Contact us and let's take your company to the next level with intelligent technology." 
+                   data-pt="Entre em contato conosco e vamos levar sua empresa ao próximo nível com tecnologia inteligente.">
+                   Contáctanos y llevemos tu empresa al siguiente nivel con tecnología inteligente.
+                </p>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>dgarciapazsoldan@gmail.com</span>
+                    </div>
+                </div>
+
+                <div class="whatsapp-numbers">
+                    <a href="https://wa.me/59174425869" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span data-es="Asesoría Comercial" data-en="Commercial Advisory" data-pt="Consultoria Comercial">Asesoría Comercial</span>
+                        <span>+591 74425869</span>
+                    </a>
+                    <a href="https://wa.me/59176894895" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span>+591 76894895</span>
+                    </a>
+                    <a href="https://wa.me/59164431922" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span>+591 64431922</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'es';
+
+        // Function to change the language of the content
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active button styling
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Find the button that was clicked and add the active class
+            document.querySelector(`.lang-btn[onclick*="changeLanguage('${lang}')"]`).classList.add('active');
+            
+            // Update all text elements with the corresponding language attribute
+            document.querySelectorAll('[data-' + lang + ']').forEach(element => {
+                element.textContent = element.getAttribute('data-' + lang);
+            });
+        }
+
+        // Función para ir atrás
+function goBack() {
+    console.log("Volver clicked.");
+    window.location.href = "/"; // Esto redirigirá a la página de inicio de tu sitio
+}
+
+        // Initial language setting on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            changeLanguage('es'); // Set default language to Spanish on load
+        });
+    </script>
+</body>
+</html>

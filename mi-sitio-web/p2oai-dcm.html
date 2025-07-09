@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilar 2 - Presencia Digital y Marketing de Contenidos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6; /* Added for better readability */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative; /* Added for header pattern */
+        }
+        
+        /* Header section */
+        .header {
+            background: linear-gradient(135deg, #2196F3 0%, #21CBF3 100%);
+            color: white;
+            padding: 50px 40px; /* Increased padding */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse"><path d="M 15 0 L 0 0 0 15" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+        
+        .header-content { /* Added to control content position over pattern */
+            position: relative;
+            z-index: 2;
+        }
+
+        .pillar-badge {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 2.8rem; /* Increased font size */
+            font-weight: 700;
+            margin-bottom: 15px; /* Adjusted margin */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3rem; /* Increased font size */
+            opacity: 0.9;
+            max-width: 800px; /* Increased max-width */
+            margin: 0 auto;
+            font-weight: 300; /* Lighter font weight */
+        }
+        
+        /* Controls section */
+        .controls {
+            background: #f8f9fa;
+            padding: 25px 40px; /* Increased padding */
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between; /* Changed to space-between */
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping for responsiveness */
+            gap: 20px; /* Added gap */
+        }
+        
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .lang-btn {
+            padding: 10px 20px; /* Adjusted padding */
+            border: 2px solid #2196F3; /* Border color from header */
+            background: white; /* White background */
+            color: #2196F3; /* Text color from header */
+            border-radius: 25px; /* More rounded corners */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem; /* Slightly smaller font */
+        }
+        
+        .lang-btn.active {
+            background: #2196F3; /* Active background from header */
+            color: white;
+            transform: translateY(-2px); /* Slight lift */
+            box-shadow: 0 5px 15px rgba(33,150,243,0.3); /* Shadow for active state */
+        }
+
+        .lang-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33,150,243,0.2);
+        }
+        
+        .back-btn {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.4);
+        }
+        
+        /* Content section */
+        .content {
+            padding: 50px 40px; /* Increased padding */
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Adjusted for better desktop layout */
+            gap: 40px; /* Increased gap */
+            margin-bottom: 50px; /* Added margin-bottom */
+        }
+        
+        .service-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); /* Light gradient background */
+            border-radius: 20px; /* More rounded corners */
+            padding: 35px; /* Increased padding */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Softer shadow */
+            border: 1px solid #e9ecef; /* Subtle border */
+            transition: all 0.3s ease;
+            position: relative; /* For the top border effect */
+            overflow: hidden;
+        }
+
+        .service-card::before { /* Top border effect */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Matches body background */
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12); /* Enhanced shadow on hover */
+        }
+        
+        .service-header { /* New flex container for icon, title, price */
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px; /* Increased margin */
+            gap: 15px; /* Gap between items */
+        }
+
+        .service-icon { /* Styling for service icons */
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Gradient background */
+            border-radius: 15px; /* Rounded corners */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .service-title {
+            flex: 1; /* Allows title to take available space */
+        }
+        
+        .service-card h3 {
+            color: #1e3c72; /* Darker blue for titles */
+            font-size: 1.4rem; /* Adjusted font size */
+            font-weight: 700;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+        
+        .service-price { /* New styling for price similar to Pilar 3 */
+            background: linear-gradient(135deg, #28a745 0%, #34ce57 100%); /* Green gradient */
+            color: white;
+            padding: 8px 16px; /* Adjusted padding */
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 10px rgba(40,167,69,0.3);
+        }
+
+        .service-description {
+            color: #6c757d; /* Muted gray for description */
+            margin-bottom: 25px; /* Increased margin */
+            font-size: 1rem; /* Base font size */
+            line-height: 1.7; /* Improved line height */
+        }
+        
+        .features-list { /* Styling for feature lists */
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: flex-start; /* Align checkmark to top of text */
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: #495057;
+        }
+
+        .features-list li::before { /* Custom checkmark icon */
+            content: '✓';
+            color: #28a745; /* Green checkmark */
+            font-weight: bold;
+            margin-right: 10px;
+            margin-top: 2px; /* Adjust vertical alignment */
+        }
+
+        /* Contact section - Copied from Pilar 3 */
+        .contact-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 50px;
+            border-radius: 20px;
+        }
+
+        .contact-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 12px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .whatsapp-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .whatsapp-number {
+            background: #25D366;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .whatsapp-number:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+        }
+
+        .hidden {
+            display: none;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px; /* Adjusted padding for smaller screens */
+            }
+
+            .container {
+                margin: 0; /* Remove auto margin to allow full width */
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                padding: 20px;
+                flex-direction: column;
+                align-items: center;
+                text-align: center; /* Center text for buttons */
+            }
+            
+            .content {
+                padding: 30px 20px; /* Adjusted padding for smaller screens */
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr; /* Single column for services on mobile */
+                gap: 25px;
+            }
+            
+            .service-card {
+                padding: 25px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Adjustments for tablets/smaller desktops */
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .container {
+                margin: 20px auto; /* Re-apply margin for tablet-like screens */
+            }
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Adjust grid for tablets */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="infographic">
+        <div class="header">
+            <div class="header-content">
+                <div class="pillar-badge">PILAR 2</div>
+                <h1 data-es="Presencia Digital y Marketing de Contenidos" 
+                   data-en="Digital Presence & Content Marketing" 
+                   data-pt="Presença Digital e Marketing de Conteúdo">
+                   Presencia Digital y Marketing de Contenidos
+                </h1>
+                <p data-es="Creamos la voz y la imagen de tu marca en el mundo digital para que conectes con tu audiencia y te posiciones como un referente en tu sector." 
+                   data-en="We create your brand's voice and image in the digital world so you can connect with your audience and position yourself as a reference in your sector." 
+                   data-pt="Criamos a voz e a imagem da sua marca no mundo digital para que você se conecte com seu público e se posicione como referência no seu setor.">
+                   Creamos la voz y la imagen de tu marca en el mundo digital para que conectes con tu audiencia y te posiciones como un referente en tu sector.
+                </p>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="changeLanguage('es')">ES</button>
+                <button class="lang-btn" onclick="changeLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="changeLanguage('pt')">PT</button>
+            </div>
+            <button class="back-btn" onclick="goBack()">
+                ⬅️ Volver <!-- Back icon and text -->
+            </button>
+        </div>
+        
+        <div class="content">
+            <div class="services-grid" id="services-container">
+                <!-- Services will be populated by JavaScript -->
+            </div>
+
+            <div class="contact-section">
+                <h2 class="contact-title" 
+                    data-es="¿Listo para potenciar tu presencia digital?" 
+                    data-en="Ready to boost your digital presence?" 
+                    data-pt="Pronto para impulsionar sua presença digital?">
+                    ¿Listo para potenciar tu presencia digital?
+                </h2>
+                <p data-es="Contáctanos y llevemos tu marca al siguiente nivel con una estrategia digital impactante." 
+                   data-en="Contact us and let's take your brand to the next level with an impactful digital strategy." 
+                   data-pt="Entre em contato conosco e vamos levar sua marca ao próximo nível com uma estratégia digital impactante.">
+                   Contáctanos y llevemos tu marca al siguiente nivel con una estrategia digital impactante.
+                </p>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>dgarciapazsoldan@gmail.com</span>
+                    </div>
+                </div>
+
+                <div class="whatsapp-numbers">
+                    <a href="https://wa.me/59174425869" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span data-es="Asesoría Comercial" data-en="Commercial Advisory" data-pt="Consultoria Comercial">Asesoría Comercial</span>
+                        <span>+591 74425869</span>
+                    </a>
+                    <a href="https://wa.me/59176894895" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span>+591 76894895</span>
+                    </a>
+                    <a href="https://wa.me/59164431922" class="whatsapp-number" target="_blank">
+                        <span>📱</span>
+                        <span>+591 64431922</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const content = {
+            es: {
+                title: "Pilar 2: Presencia Digital y Marketing de Contenidos",
+                subtitle: "Creamos la voz y la imagen de tu marca en el mundo digital para que conectes con tu audiencia y te posiciones como un referente en tu sector.",
+                services: [
+                    {
+                        icon: "🎬",
+                        title: "Producción de Video Marketing con IA",
+                        description: "Creamos videos profesionales para redes sociales, publicidad y recorridos virtuales utilizando las últimas herramientas de IA. Desde guiones automatizados hasta edición avanzada, entregamos contenido visual de alta calidad en tiempo récord.",
+                        features: [
+                            "Video corto (1-3 min): $35",
+                            "Video corporativo (5-10 min): $60",
+                            "Serie de 5 videos: $85"
+                        ]
+                    },
+                    {
+                        icon: "📝",
+                        title: "Creación de Blogs y Plataformas de Contenido",
+                        description: "Desarrollamos tu centro de estrategia digital con blogs profesionales, sistemas de gestión de contenido y plataformas optimizadas para SEO. Incluye redacción de contenido con IA y estrategias de posicionamiento.",
+                        features: [
+                            "Blog básico + 5 artículos: $45",
+                            "Blog avanzado + 10 artículos: $75",
+                            "Plataforma completa: $120"
+                        ]
+                    },
+                    {
+                        icon: "📊",
+                        title: "Diseño de Infografías Profesionales",
+                        description: "Transformamos datos complejos en piezas visuales atractivas y fáciles de entender. Perfectas para redes sociales, informes ejecutivos y presentaciones que generan impacto y engagement.",
+                        features: [
+                            "Infografía simple: $15",
+                            "Infografía compleja: $25",
+                            "Paquete de 5 infografías: $50"
+                        ]
+                    },
+                    {
+                        icon: "👤",
+                        title: "Desarrollo de Marca Personal y Profesional",
+                        description: "Construimos tu presencia digital profesional con CVs optimizados, portafolios digitales y perfiles de LinkedIn estratégicamente posicionados para destacar en el mercado laboral global.",
+                        features: [
+                            "CV optimizado ATS: $25",
+                            "Portafolio digital: $40",
+                            "Paquete completo LinkedIn: $65"
+                        ]
+                    },
+                    {
+                        icon: "🎨",
+                        title: "Diseño Gráfico Digital Avanzado",
+                        description: "Creamos identidades visuales completas, logotipos, banners, y materiales promocionales utilizando herramientas de IA para diseño. Incluye manual de marca y aplicaciones en múltiples formatos.",
+                        features: [
+                            "Logo + 3 aplicaciones: $30",
+                            "Identidad completa: $55",
+                            "Paquete premium: $80"
+                        ]
+                    },
+                    {
+                        icon: "📱",
+                        title: "Gestión de Redes Sociales con IA",
+                        description: "Automatizamos y optimizamos tu presencia en redes sociales con herramientas de IA para programación, análisis de audiencia y creación de contenido personalizado que genera engagement real.",
+                        features: [
+                            "Gestión 1 red (30 posts): $50",
+                            "Gestión 3 redes (60 posts): $80",
+                            "Premium multi-red: $120"
+                        ]
+                    }
+                ]
+            },
+            en: {
+                title: "Pillar 2: Digital Presence & Content Marketing",
+                subtitle: "We create your brand's voice and image in the digital world so you can connect with your audience and position yourself as a reference in your sector.",
+                services: [
+                    {
+                        icon: "🎬",
+                        title: "AI Video Marketing Production",
+                        description: "We create professional videos for social media, advertising, and virtual tours using the latest AI tools. From automated scripts to advanced editing, we deliver high-quality visual content in record time.",
+                        features: [
+                            "Short video (1-3 min): $35",
+                            "Corporate video (5-10 min): $60",
+                            "5-video series: $85"
+                        ]
+                    },
+                    {
+                        icon: "📝",
+                        title: "Blog & Content Platform Creation",
+                        description: "We develop your digital strategy center with professional blogs, content management systems, and SEO-optimized platforms. Includes AI content writing and positioning strategies.",
+                        features: [
+                            "Basic blog + 5 articles: $45",
+                            "Advanced blog + 10 articles: $75",
+                            "Complete platform: $120"
+                        ]
+                    },
+                    {
+                        icon: "📊",
+                        title: "Professional Infographic Design",
+                        description: "We transform complex data into attractive and easy-to-understand visual pieces. Perfect for social media, executive reports, and presentations that generate impact and engagement.",
+                        features: [
+                            "Simple infographic: $15",
+                            "Complex infographic: $25",
+                            "5-infographic package: $50"
+                        ]
+                    },
+                    {
+                        icon: "👤",
+                        title: "Personal & Professional Brand Development",
+                        description: "We build your professional digital presence with optimized CVs, digital portfolios, and strategically positioned LinkedIn profiles to stand out in the global job market.",
+                        features: [
+                            "ATS-optimized CV: $25",
+                            "Digital portfolio: $40",
+                            "Complete LinkedIn package: $65"
+                        ]
+                    },
+                    {
+                        icon: "🎨",
+                        title: "Advanced Digital Graphic Design",
+                        description: "We create complete visual identities, logos, banners, and promotional materials using AI design tools. Includes brand manual and applications in multiple formats.",
+                        features: [
+                            "Logo + 3 applications: $30",
+                            "Complete identity: $55",
+                            "Premium package: $80"
+                        ]
+                    },
+                    {
+                        icon: "📱",
+                        title: "AI Social Media Management",
+                        description: "We automate and optimize your social media presence with AI tools for scheduling, audience analysis, and personalized content creation that generates real engagement.",
+                        features: [
+                            "1 network management (30 posts): $50",
+                            "3 networks (60 posts): $80",
+                            "Premium multi-network: $120"
+                        ]
+                    }
+                ]
+            },
+            pt: {
+                title: "Pilar 2: Presença Digital e Marketing de Conteúdo",
+                subtitle: "Criamos a voz e a imagem da sua marca no mundo digital para que você se conecte com seu público e se posicione como referência no seu setor.",
+                services: [
+                    {
+                        icon: "🎬",
+                        title: "Produção de Vídeo Marketing com IA",
+                        description: "Criamos vídeos profissionais para redes sociais, publicidade e tours virtuais usando as mais recentes ferramentas de IA. Desde roteiros automatizados até edição avançada, entregamos conteúdo visual de alta qualidade em tempo recorde.",
+                        features: [
+                            "Vídeo curto (1-3 min): $35",
+                            "Vídeo corporativo (5-10 min): $60",
+                            "Série de 5 vídeos: $85"
+                        ]
+                    },
+                    {
+                        icon: "📝",
+                        title: "Criação de Blogs e Plataformas de Conteúdo",
+                        description: "Desenvolvemos seu centro de estratégia digital com blogs profissionais, sistemas de gestão de conteúdo e plataformas otimizadas para SEO. Inclui redação de conteúdo com IA e estratégias de posicionamento.",
+                        features: [
+                            "Blog básico + 5 artigos: $45",
+                            "Blog avançado + 10 artigos: $75",
+                            "Plataforma completa: $120"
+                        ]
+                    },
+                    {
+                        icon: "📊",
+                        title: "Design de Infográficos Profissionais",
+                        description: "Transformamos dados complexos em peças visuais atrativas e fáceis de entender. Perfeitas para redes sociais, relatórios executivos e apresentações que geram impacto e engajamento.",
+                        features: [
+                            "Infográfico simples: $15",
+                            "Infográfico complexo: $25",
+                            "Pacote de 5 infográficos: $50"
+                        ]
+                    },
+                    {
+                        icon: "👤",
+                        title: "Desenvolvimento de Marca Pessoal e Profissional",
+                        description: "Construímos sua presença digital profissional com CVs otimizados, portfólios digitais e perfis do LinkedIn estrategicamente posicionados para se destacar no mercado de trabalho global.",
+                        features: [
+                            "CV otimizado ATS: $25",
+                            "Portfólio digital: $40",
+                            "Pacote completo LinkedIn: $65"
+                        ]
+                    },
+                    {
+                        icon: "🎨",
+                        title: "Design Gráfico Digital Avançado",
+                        description: "Criamos identidades visuais completas, logotipos, banners e materiais promocionais usando ferramentas de IA para design. Inclui manual da marca e aplicações em múltiplos formatos.",
+                        features: [
+                            "Logo + 3 aplicações: $30",
+                            "Identidade completa: $55",
+                            "Pacote premium: $80"
+                        ]
+                    },
+                    {
+                        icon: "📱",
+                        title: "Gestão de Redes Sociais com IA",
+                        description: "Automatizamos e otimizamos sua presença nas redes sociais com ferramentas de IA para agendamento, análise de audiência e criação de conteúdo personalizado que gera engajamento real.",
+                        features: [
+                            "Gestão 1 rede (30 posts): $50",
+                            "Gestão 3 redes (60 posts): $80",
+                            "Premium multi-rede: $120"
+                        ]
+                    }
+                ]
+            }
+        };
+        
+        let currentLang = 'es';
+        
+        // Function to change the language of the content
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // Update active button styling
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Find the button that was clicked and add the active class
+            document.querySelector(`.lang-btn[onclick*="changeLanguage('${lang}')"]`).classList.add('active');
+            
+            // Update header content
+            document.querySelector('.header h1').textContent = content[lang].title;
+            document.querySelector('.header p').textContent = content[lang].subtitle;
+            
+            renderServices(); // Re-render services with new language
+        }
+        
+        // Function to render the service cards dynamically
+        function renderServices() {
+            const container = document.getElementById('services-container');
+            const services = content[currentLang].services;
+            
+            container.innerHTML = services.map(service => `
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">${service.icon}</div>
+                        <div class="service-title">
+                            <h3>${service.title}</h3>
+                        </div>
+                        <!-- Display price based on the first feature's price, or a range if available -->
+                        <div class="service-price">
+                            ${service.features && service.features.length > 0 
+                                ? service.features.length === 1 
+                                    ? service.features[0].split(': ')[1] 
+                                    : `$${Math.min(...service.features.map(f => parseFloat(f.split('$')[1])))} - $${Math.max(...service.features.map(f => parseFloat(f.split('$')[1])))}`
+                                : 'N/A'}
+                        </div>
+                    </div>
+                    <div class="service-description">${service.description}</div>
+                    <ul class="features-list">
+                        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+        
+        // Función para ir atrás (no genera PDF)
+function goBack() {
+    console.log("Volver clicked.");
+    window.location.href = "/"; // Esto redirigirá a la página de inicio de tu sitio
+}
+        
+        // Initialize with Spanish content on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            changeLanguage('es'); 
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">osmosis-ai - Soluciones Digitales Estratégicas</title>
+    <!-- Favicon -->
+    <link rel="icon" href="https://placehold.co/32x32/4f46e5/ffffff?text=O-A" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out;
+        }
+        .accordion-content.open {
+            max-height: 2000px; /* Adjust as needed for content */
+            transition: max-height 1s ease-in-out;
+        }
+        .lang-switch button.active {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2832&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        .hero-section h1, .hero-section p {
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8);
+        }
+        h1, h2, h3 {
+            letter-spacing: -0.02em; /* Tighter letter spacing for headings */
+        }
+        .text-justify-elegant {
+            text-align: justify;
+            line-height: 1.7; /* Increased line height for better readability in justified text */
+        }
+        .youtube-thumbnail {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .youtube-thumbnail:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header & Hero Section -->
+    <header class="hero-section text-white shadow-lg">
+        <!-- Language Switcher -->
+        <div class="lang-switch absolute top-4 right-4 bg-black bg-opacity-30 rounded-full p-1 flex gap-1 z-10">
+            <button id="lang-es" class="px-3 py-1 text-xs font-semibold rounded-full transition-colors">ES</button>
+            <button id="lang-en" class="px-3 py-1 text-xs font-semibold rounded-full transition-colors">EN</button>
+        </div>
+
+        <div class="container mx-auto px-6 py-24 text-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight" data-lang-key="heroTitle">osmosis-<span class="text-indigo-400">ai</span></h1>
+            <p class="mt-4 text-lg md:text-xl font-light" data-lang-key="heroSubtitle">Transformamos ideas en negocios rentables y sostenibles.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 -mt-16">
+
+        <!-- Mission Section -->
+        <section class="bg-white p-8 rounded-xl shadow-xl mb-12 text-center">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-2" data-lang-key="missionTitle">Nuestra Misión</h2>
+            <p class="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed" data-lang-key="missionText">
+                Potenciar a emprendedores y empresas con soluciones digitales y estratégicas que transforman ideas en negocios rentables y sostenibles.
+            </p>
+            <p class="mt-4 text-md text-gray-600" data-lang-key="allianceText">
+                <strong>El Inicio de una Alianza:</strong> Buscamos establecer una asociación colaborativa, desarrollarnos juntos como empresa.
+            </p>
+        </section>
+
+        <!-- Services Accordion -->
+        <section>
+            <h2 class="text-3xl font-bold text-center mb-8" data-lang-key="servicesTitle">Propuesta de Servicios</h2>
+            <div id="services-accordion" class="space-y-4 max-w-5xl mx-auto">
+                <!-- Pillar 1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <button class="accordion-toggle w-full flex justify-between items-center text-left p-5 bg-gray-50 hover:bg-gray-200 transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-compass-drafting text-2xl text-indigo-500 mr-4 w-8 text-center"></i>
+                            <span class="font-bold text-lg text-gray-900" data-lang-key="pilar1Title">Pilar 1: Estrategia, Datos y Planificación</span>
+                        </div>
+                        <i class="fas fa-chevron-down transform transition-transform duration-500"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-6 space-y-4">
+                            <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p1s1Title">Desarrollo de Planes Financieros Escalables</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p1s1Desc">Ideal para startups o empresas que buscan atraer inversores. Realizamos estudios de prefactibilidad, análisis de mercado y proyecciones financieras realistas para asegurar la viabilidad.</p>
+                            </div>
+                            <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p1s2Title">Generación y Análisis de Datos Estratégicos</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p1s2Desc">Transformamos datos crudos en inteligencia de negocio. Diseñamos bases de datos, aplicamos técnicas estadísticas y entregamos informes con conclusiones accionables.</p>
+                            </div>
+                             <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p1s3Title">Simulación de Datos y Proyecciones</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p1s3Desc">Cuando los datos reales son escasos, generamos conjuntos de datos hipotéticos robustos, cruciales para la elaboración de proyecciones y análisis de escenarios.</p>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <a href="/p1oai-sda.html" class="inline-flex items-center gap-2 bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+                                    <i class="fas fa-chart-pie"></i>
+                                    <span data-lang-key="p1s4Btn">Estrategia & Datos</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pillar 2 -->
+                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <button class="accordion-toggle w-full flex justify-between items-center text-left p-5 bg-gray-50 hover:bg-gray-200 transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-bullhorn text-2xl text-indigo-500 mr-4 w-8 text-center"></i>
+                            <span class="font-bold text-lg text-gray-900" data-lang-key="pilar2Title">Pilar 2: Presencia Digital y Marketing</span>
+                        </div>
+                        <i class="fas fa-chevron-down transform transition-transform duration-500"></i>
+                    </button>
+                    <div class="accordion-content">
+                         <div class="p-6 space-y-4">
+                            <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p2s1Title">Producción de Video Marketing con IA</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p2s1Desc">Producimos videos cortos y dinámicos para redes sociales o publicidad, con alta calidad y en tiempo récord usando herramientas de IA.</p>
+                                <div class="mt-4">
+                                    <h5 class="font-semibold text-center mb-3" data-lang-key="p2s1PortfolioTitle">Nuestro Portafolio</h5>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <a href="https://www.youtube.com/watch?v=725ClWFvRLY" target="_blank" class="youtube-thumbnail block"><img src="https://img.youtube.com/vi/725ClWFvRLY/hqdefault.jpg" alt="Miniatura de video de YouTube sobre marketing" class="rounded-lg w-full"></a>
+                                        <a href="https://www.youtube.com/watch?v=8DEvxvTurqg" target="_blank" class="youtube-thumbnail block"><img src="https://img.youtube.com/vi/8DEvxvTurqg/hqdefault.jpg" alt="Miniatura de video de YouTube sobre redes sociales" class="rounded-lg w-full"></a>
+                                        <a href="https://www.youtube.com/watch?v=XF-M_f2B1XE" target="_blank" class="youtube-thumbnail block"><img src="https://img.youtube.com/vi/XF-M_f2B1XE/hqdefault.jpg" alt="Miniatura de video de YouTube sobre estrategia digital" class="rounded-lg w-full"></a>
+                                        <a href="https://www.youtube.com/watch?v=ByhuzYlgkpU" target="_blank" class="youtube-thumbnail block"><img src="https://img.youtube.com/vi/ByhuzYlgkpU/hqdefault.jpg" alt="Miniatura de video de YouTube sobre negocios" class="rounded-lg w-full"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p2s2Title">Desarrollo de Marca Personal y Profesional</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p2s2Desc">Creamos CVs de impacto (tradicionales y visuales), portafolios digitales y optimizamos tu perfil de LinkedIn para destacar en el mercado laboral.</p>
+                            </div>
+                             <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p2s3Title">Creación de Blogs e Infografías</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p2s3Desc">Diseñamos el centro de tu estrategia digital: blogs profesionales para atraer clientes y transformamos datos complejos en infografías de alto impacto.</p>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <a href="/p2oai-dcm.html" class="inline-flex items-center gap-2 bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+                                   <i class="fas fa-file-alt"></i>
+                                   <span data-lang-key="p2s4Btn">Ver oferta de servicios y cotización</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pillar 3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <button class="accordion-toggle w-full flex justify-between items-center text-left p-5 bg-gray-50 hover:bg-gray-200 transition-colors">
+                         <div class="flex items-center">
+                            <i class="fas fa-robot text-2xl text-indigo-500 mr-4 w-8 text-center"></i>
+                            <span class="font-bold text-lg text-gray-900" data-lang-key="pilar3Title">Pilar 3: Herramientas para la Automatización de Procesos</span>
+                        </div>
+                        <i class="fas fa-chevron-down transform transition-transform duration-500"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-6 space-y-4">
+                            <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p3s1Title">Automatización de Tareas y Agentes de IA</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p3s1Desc">Identificamos procesos repetitivos y los automatizamos (email marketing, organización de archivos, respuestas automáticas), liberando tu tiempo para concentrarte en crecer.</p>
+                            </div>
+                            <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p3s2Title">Formularios Inteligentes con Generación de PDF</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p3s2Desc">Digitalizamos la recolección de datos. Creamos formularios web a medida (encuestas, contratos, cotizaciones) que generan un PDF profesional automáticamente.</p>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <a href="/p3oai-bpa.html" class="inline-flex items-center gap-2 bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span data-lang-key="p3s3Btn">Ver oferta de servicios y cotización</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pillar 4 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <button class="accordion-toggle w-full flex justify-between items-center text-left p-5 bg-gray-50 hover:bg-gray-200 transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-graduation-cap text-2xl text-indigo-500 mr-4 w-8 text-center"></i>
+                            <span class="font-bold text-lg text-gray-900" data-lang-key="pilar4Title">Pilar 4: Asistencia Académica</span>
+                        </div>
+                        <i class="fas fa-chevron-down transform transition-transform duration-500"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-6 space-y-4">
+                            <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p4s1Title">Plantillas y Formato de Tesis</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p4s1Desc">Creamos plantillas con la estructura y formato (APA, etc.) que exige tu carrera, con índices automáticos para que solo te concentres en la redacción.</p>
+                            </div>
+                            <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p4s2Title">Búsqueda y Sistematización de Artículos</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p4s2Desc">Te ayudamos con la revisión y descarga de artículos científicos relacionados con tu tema, organizándolos para un fácil acceso y citación.</p>
+                            </div>
+                             <div class="p-4 border rounded-md bg-gray-50">
+                                <h4 class="font-semibold" data-lang-key="p4s3Title">Simulación de Defensa y Guías de Estudio</h4>
+                                <p class="text-sm text-gray-700 mt-1 text-justify" data-lang-key="p4s3Desc">Identificamos puntos débiles, generamos posibles preguntas de tribunal y te damos los argumentos para solventar observaciones. Además, creamos infografías para tu presentación.</p>
+                            </div>
+                            <div class="mt-4 text-center">
+                                 <a href="/p4oai-aa.html" class="inline-flex items-center gap-2 bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+                                   <i class="fas fa-file-alt"></i>
+                                   <span data-lang-key="p4s4Btn">Ver oferta de servicios y cotización</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Founder Section -->
+        <section class="mt-16 bg-white rounded-lg shadow-xl p-8">
+            <h2 class="text-3xl font-bold text-center mb-2" data-lang-key="philosophyTitle">Nuestra Filosofía</h2>
+            <p class="text-center text-gray-600 mb-8" data-lang-key="philosophySubtitle">Una visión centrada en la estrategia y la colaboración.</p>
+            <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8">
+                <div class="md:w-1/3 text-center">
+                    <img class="rounded-full w-48 h-48 mx-auto object-cover shadow-lg" src="https://placehold.co/400x400/e0e7ff/4338ca?text=D.G." alt="Fotografía de David Garcia Paz Soldan, Fundador de osmosis-ai">
+                    <h3 class="mt-4 text-xl font-bold text-gray-900" data-lang-key="ceoName">David Garcia Paz Soldan</h3>
+                    <p class="text-indigo-600 font-semibold" data-lang-key="ceoTitle">CEO</p>
+                    <!-- NOTE: Remember to replace '#' with the actual LinkedIn profile URL -->
+                    <a href="#" class="text-gray-500 hover:text-indigo-700 transition-colors mt-2 inline-block">
+                        <i class="fab fa-linkedin text-2xl"></i>
+                    </a>
+                </div>
+                <div class="md:w-2/3">
+                    <p class="text-gray-700 text-lg text-justify-elegant" data-lang-key="ceoBio">
+                        <i class="fas fa-quote-left text-indigo-200 text-2xl mr-2 float-left"></i>Nuestra agencia nació de la experiencia, la perseverancia y una lección fundamental aprendida en el camino. En los últimos cinco años hemos incursionado en una decena de emprendimientos. Cada uno de esos proyectos, aunque potencialmente rentables, nos ayudó a entender que necesitábamos un plan de negocios sólido. La falta de estrategia, planificación financiera y análisis de mercado era el eslabón perdido. Fue esta revelación, nacida de la propia experiencia, la que encendió nuestra misión: ser el socio estratégico que nosotros mismos necesitábamos, para entregar a los emprendedores la hoja de ruta clara y basada en datos que transforma la pasión en un negocio rentable y sostenible.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Showcase Project -->
+        <section class="mt-16">
+             <h2 class="text-3xl font-bold text-center mb-8" data-lang-key="showcaseTitle">Proyecto Insignia</h2>
+             <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden md:flex">
+                <div class="md:w-1/2">
+                    <img class="h-64 w-full object-cover md:h-full" src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2940&auto=format&fit=crop" alt="Captura de pantalla de la aplicación de estimulación temprana en un dispositivo móvil">
+                </div>
+                <div class="p-8 md:w-1/2 flex flex-col justify-center">
+                    <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold" data-lang-key="showcaseSubtitle">Desarrollo de Productos</div>
+                    <h3 class="block mt-1 text-2xl leading-tight font-bold text-black" data-lang-key="showcaseProjectName">App de Estimulación Temprana</h3>
+                    <p class="mt-4 text-gray-600 text-justify-elegant" data-lang-key="showcaseDesc">Hemos desarrollado una aplicación móvil robusta para padres y centros infantiles. Este proyecto demuestra nuestra capacidad para gestionar la arquitectura de software, el diseño de experiencia de usuario (UX/UI) y el desarrollo de aplicaciones funcionales y escalables, una garantía de la calidad técnica que aplicamos a todos nuestros servicios.</p>
+                    <button class="mt-6 bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors w-full sm:w-auto" data-lang-key="showcaseBtn">Conocer más</button>
+                </div>
+             </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto py-8 px-6 text-center">
+            <h3 class="text-2xl font-bold" data-lang-key="footerTitle">¿Listo para empezar?</h3>
+            <p class="mt-2" data-lang-key="footerSubtitle">Contáctanos y llevemos tu idea al siguiente nivel.</p>
+            <div class="mt-6 space-y-4">
+                <div class="flex items-center justify-center gap-3">
+                    <i class="fas fa-envelope text-indigo-300"></i>
+                    <a href="mailto:dgarciapazsoldan@gmail.com" class="text-indigo-300 hover:text-indigo-100">dgarciapazsoldan@gmail.com</a>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg" data-lang-key="commercialAdvisory">Asesoría Comercial</h4>
+                    <div class="mt-2 flex flex-col sm:flex-row justify-center items-center gap-x-6 gap-y-2 text-indigo-300">
+                        <a href="https://wa.me/59174425869" target="_blank" class="hover:text-indigo-100 flex items-center gap-2"><i class="fab fa-whatsapp"></i>+591 74425869</a>
+                        <a href="https://wa.me/59176894895" target="_blank" class="hover:text-indigo-100 flex items-center gap-2"><i class="fab fa-whatsapp"></i>+591 76894895</a>
+                        <a href="https://wa.me/59164431922" target="_blank" class="hover:text-indigo-100 flex items-center gap-2"><i class="fab fa-whatsapp"></i>+591 64431922</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 text-gray-400 text-sm">
+                &copy; 2024 <span data-lang-key="footerAgencyName">osmosis-ai</span>. <span data-lang-key="footerRights">Todos los derechos reservados.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Translations Object ---
+            const translations = {
+                es: {
+                    pageTitle: "osmosis-ai - Soluciones Digitales Estratégicas",
+                    heroTitle: "osmosis-<span class=\"text-indigo-400\">ai</span>",
+                    heroSubtitle: "Transformamos ideas en negocios rentables y sostenibles.",
+                    missionTitle: "Nuestra Misión",
+                    missionText: "Potenciar a emprendedores y empresas con soluciones digitales y estratégicas que transforman ideas en negocios rentables y sostenibles.",
+                    allianceText: "<strong>El Inicio de una Alianza:</strong> Buscamos establecer una asociación colaborativa, desarrollarnos juntos como empresa.",
+                    servicesTitle: "Propuesta de Servicios",
+                    pilar1Title: "Pilar 1: Estrategia, Datos y Planificación",
+                    p1s1Title: "Desarrollo de Planes Financieros Escalables",
+                    p1s1Desc: "Ideal para startups o empresas que buscan atraer inversores. Realizamos estudios de prefactibilidad, análisis de mercado y proyecciones financieras realistas para asegurar la viabilidad.",
+                    p1s2Title: "Generación y Análisis de Datos Estratégicos",
+                    p1s2Desc: "Transformamos datos crudos en inteligencia de negocio. Diseñamos bases de datos, aplicamos técnicas estadísticas y entregamos informes con conclusiones accionables.",
+                    p1s3Title: "Simulación de Datos y Proyecciones",
+                    p1s3Desc: "Cuando los datos reales son escasos, generamos conjuntos de datos hipotéticos robustos, cruciales para la elaboración de proyecciones y análisis de escenarios.",
+                    p1s4Btn: "Estrategia & Datos",
+                    pilar2Title: "Pilar 2: Presencia Digital y Marketing",
+                    p2s1Title: "Producción de Video Marketing con IA",
+                    p2s1Desc: "Producimos videos cortos y dinámicos para redes sociales o publicidad, con alta calidad y en tiempo récord usando herramientas de IA.",
+                    p2s1PortfolioTitle: "Nuestro Portafolio",
+                    p2s2Title: "Desarrollo de Marca Personal y Profesional",
+                    p2s2Desc: "Creamos CVs de impacto (tradicionales y visuales), portafolios digitales y optimizamos tu perfil de LinkedIn para destacar en el mercado laboral.",
+                    p2s3Title: "Creación de Blogs e Infografías",
+                    p2s3Desc: "Diseñamos el centro de tu estrategia digital: blogs profesionales para atraer clientes y transformamos datos complejos en infografías de alto impacto.",
+                    p2s4Btn: "Ver oferta de servicios y cotización",
+                    pilar3Title: "Pilar 3: Herramientas para la Automatización de Procesos",
+                    p3s1Title: "Automatización de Tareas y Agentes de IA",
+                    p3s1Desc: "Identificamos procesos repetitivos y los automatizamos (email marketing, organización de archivos, respuestas automáticas), liberando tu tiempo para concentrarte en crecer.",
+                    p3s2Title: "Formularios Inteligentes con Generación de PDF",
+                    p3s2Desc: "Digitalizamos la recolección de datos. Creamos formularios web a medida (encuestas, contratos, cotizaciones) que generan un PDF profesional automáticamente.",
+                    p3s3Btn: "Ver oferta de servicios y cotización",
+                    pilar4Title: "Pilar 4: Asistencia Académica",
+                    p4s1Title: "Plantillas y Formato de Tesis",
+                    p4s1Desc: "Creamos plantillas con la estructura y formato (APA, etc.) que exige tu carrera, con índices automáticos para que solo te concentres en la redacción.",
+                    p4s2Title: "Búsqueda y Sistematización de Artículos",
+                    p4s2Desc: "Te ayudamos con la revisión y descarga de artículos científicos relacionados con tu tema, organizándolos para un fácil acceso y citación.",
+                    p4s3Title: "Simulación de Defensa y Guías de Estudio",
+                    p4s3Desc: "Identificamos puntos débiles, generamos posibles preguntas de tribunal y te damos los argumentos para solventar observaciones. Además, creamos infografías para tu presentación.",
+                    p4s4Btn: "Ver oferta de servicios y cotización",
+                    philosophyTitle: "Nuestra Filosofía",
+                    philosophySubtitle: "Una visión centrada en la estrategia y la colaboración.",
+                    ceoName: "David Garcia Paz Soldan",
+                    ceoTitle: "CEO",
+                    ceoBio: "<i class=\"fas fa-quote-left text-indigo-200 text-2xl mr-2 float-left\"></i>Nuestra agencia nació de la experiencia, la perseverancia y una lección fundamental aprendida en el camino. En los últimos cinco años hemos incursionado en una decena de emprendimientos. Cada uno de esos proyectos, aunque potencialmente rentables, nos ayudó a entender que necesitábamos un plan de negocios sólido. La falta de estrategia, planificación financiera y análisis de mercado era el eslabón perdido. Fue esta revelación, nacida de la propia experiencia, la que encendió nuestra misión: ser el socio estratégico que nosotros mismos necesitábamos, para entregar a los emprendedores la hoja de ruta clara y basada en datos que transforma la pasión en un negocio rentable y sostenible.",
+                    showcaseTitle: "Proyecto Insignia",
+                    showcaseSubtitle: "Desarrollo de Productos",
+                    showcaseProjectName: "App de Estimulación Temprana",
+                    showcaseDesc: "Hemos desarrollado una aplicación móvil robusta para padres y centros infantiles. Este proyecto demuestra nuestra capacidad para gestionar la arquitectura de software, el diseño de experiencia de usuario (UX/UI) y el desarrollo de aplicaciones funcionales y escalables, una garantía de la calidad técnica que aplicamos a todos nuestros servicios.",
+                    showcaseBtn: "Conocer más",
+                    footerTitle: "¿Listo para empezar?",
+                    footerSubtitle: "Contáctanos y llevemos tu idea al siguiente nivel.",
+                    commercialAdvisory: "Asesoría Comercial",
+                    footerAgencyName: "osmosis-ai",
+                    footerRights: "Todos los derechos reservados."
+                },
+                en: {
+                    pageTitle: "osmosis-ai - Strategic Digital Solutions",
+                    heroTitle: "osmosis-<span class=\"text-indigo-400\">ai</span>",
+                    heroSubtitle: "We transform ideas into profitable and sustainable businesses.",
+                    missionTitle: "Our Mission",
+                    missionText: "To empower entrepreneurs and companies with digital and strategic solutions that transform ideas into profitable and sustainable businesses.",
+                    allianceText: "<strong>The Beginning of a Partnership:</strong> We seek to establish a collaborative partnership, to develop and grow together as companies.",
+                    servicesTitle: "Service Proposal",
+                    pilar1Title: "Pillar 1: Strategy, Data, and Planning",
+                    p1s1Title: "Scalable Financial Plan Development",
+                    p1s1Desc: "Ideal for startups or companies looking to attract investors. We conduct pre-feasibility studies, market analysis, and realistic financial projections to ensure viability.",
+                    p1s2Title: "Strategic Data Generation and Analysis",
+                    p1s2Desc: "We turn raw data into business intelligence. We design databases, apply statistical techniques, and deliver reports with actionable conclusions.",
+                    p1s3Title: "Data Simulation and Projections",
+                    p1s3Desc: "When real data is scarce, we generate robust hypothetical datasets, crucial for developing projections and scenario analysis.",
+                    p1s4Btn: "Strategy & Data",
+                    pilar2Title: "Pillar 2: Digital Presence and Marketing",
+                    p2s1Title: "AI-Powered Video Marketing Production",
+                    p2s1Desc: "We produce short, dynamic videos for social media or advertising with high quality and in record time using AI tools.",
+                    p2s1PortfolioTitle: "Our Portfolio",
+                    p2s2Title: "Personal and Professional Brand Development",
+                    p2s2Desc: "We create impactful resumes (traditional and visual), digital portfolios, and optimize your LinkedIn profile to stand out in the job market.",
+                    p2s3Title: "Blog and Infographic Creation",
+                    p2s3Desc: "We design the core of your digital strategy: professional blogs to attract clients and turn complex data into high-impact infographics.",
+                    p2s4Btn: "View service offer and quote",
+                    pilar3Title: "Pillar 3: Process Automation Tools",
+                    p3s1Title: "Task Automation and AI Agents",
+                    p3s1Desc: "We identify and automate repetitive processes (email marketing, file organization, automatic replies), freeing up your time to focus on growth.",
+                    p3s2Title: "Smart Forms with PDF Generation",
+                    p3s2Desc: "We digitize data collection. We create custom web forms (surveys, contracts, quotes) that automatically generate a professional PDF.",
+                    p3s3Btn: "View service offer and quote",
+                    pilar4Title: "Pillar 4: Academic Assistance",
+                    p4s1Title: "Thesis Templates and Formatting",
+                    p4s1Desc: "We create templates with the structure and format (APA, etc.) your degree requires, with automatic indexes so you can focus only on writing.",
+                    p4s2Title: "Article Search and Systematization",
+                    p4s2Desc: "We help you with the review and download of scientific articles related to your topic, organizing them for easy access and citation.",
+                    p4s3Title: "Defense Simulation and Study Guides",
+                    p4s3Desc: "We identify weak points, generate potential questions from the committee, and provide you with arguments to address observations. We also create infographics for your presentation.",
+                    p4s4Btn: "View service offer and quote",
+                    philosophyTitle: "Our Philosophy",
+                    philosophySubtitle: "A vision centered on strategy and collaboration.",
+                    ceoName: "David Garcia Paz Soldan",
+                    ceoTitle: "CEO",
+                    ceoBio: "<i class=\"fas fa-quote-left text-indigo-200 text-2xl mr-2 float-left\"></i>Our agency was born from experience, perseverance, and a fundamental lesson learned on the way. Over the past five years, we have ventured into a dozen startups. Each of those projects, while potentially profitable, helped us understand that we needed a solid business plan. The lack of strategy, financial planning, and market analysis was the missing link. It was this revelation, born from our own experience, that ignited our mission: to be the strategic partner we ourselves needed, to provide entrepreneurs with the clear, data-driven roadmap that transforms passion into a profitable and sustainable business.",
+                    showcaseTitle: "Flagship Project",
+                    showcaseSubtitle: "Product Development",
+                    showcaseProjectName: "Early Stimulation App",
+                    showcaseDesc: "We have developed a robust mobile application for parents and childcare centers. This project demonstrates our ability to manage software architecture, user experience design (UX/UI), and the development of functional and scalable applications, a guarantee of the technical quality we apply to all our services.",
+                    showcaseBtn: "Learn more",
+                    footerTitle: "Ready to start?",
+                    footerSubtitle: "Contact us and let's take your idea to the next level.",
+                    commercialAdvisory: "Commercial Advisory",
+                    footerAgencyName: "osmosis-ai",
+                    footerRights: "All rights reserved."
+                }
+            };
+
+            // --- Language Switcher Logic ---
+            const langEsBtn = document.getElementById('lang-es');
+            const langEnBtn = document.getElementById('lang-en');
+
+            const setLanguage = (lang) => {
+                document.documentElement.lang = lang;
+                localStorage.setItem('language', lang);
+
+                document.querySelectorAll('[data-lang-key]').forEach(elem => {
+                    const key = elem.getAttribute('data-lang-key');
+                    if (translations[lang][key]) {
+                        // Check if the content is likely to contain HTML tags
+                        if (translations[lang][key].includes('<')) {
+                             elem.innerHTML = translations[lang][key];
+                        } else {
+                             elem.textContent = translations[lang][key];
+                        }
+                    }
+                });
+                
+                langEsBtn.classList.toggle('active', lang === 'es');
+                langEnBtn.classList.toggle('active', lang === 'en');
+            };
+
+            langEsBtn.addEventListener('click', () => setLanguage('es'));
+            langEnBtn.addEventListener('click', () => setLanguage('en'));
+
+            const savedLang = localStorage.getItem('language') || 'es';
+            setLanguage(savedLang);
+
+            // --- Accordion Logic ---
+            const accordionToggles = document.querySelectorAll('.accordion-toggle');
+            accordionToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const content = toggle.nextElementSibling;
+                    const icon = toggle.querySelector('.fa-chevron-down');
+                    
+                    content.classList.toggle('open');
+                    icon.classList.toggle('rotate-180');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
